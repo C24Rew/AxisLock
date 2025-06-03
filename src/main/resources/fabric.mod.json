@@ -1,0 +1,31 @@
+{
+	"schemaVersion": 1,
+	"id": "axislock",
+	"version": "${version}",
+	"name": "AxisLock",
+	"description": "This is an example description! Tell everyone what your mod is about!",
+	"authors": [
+		"C24Rew"
+	],
+	"contact": {
+		"homepage": "https://fabricmc.net/",
+		"sources": "https://github.com/FabricMC/fabric-example-mod"
+	},
+	"license": "MIT (with resale restriction)",
+	"icon": "assets/axislock/icon.png",
+	"environment": "*",
+	"entrypoints": {
+		"client": [
+			"com.c24rew.axislock.AxisLock"
+		]
+	},
+	"depends": {
+		"fabricloader": ">=0.16.14",
+		"minecraft": "~1.21.5",
+		"java": ">=21",
+		"fabric-api": "*"
+	},
+	"suggests": {
+		"another-mod": "*"
+	}
+}

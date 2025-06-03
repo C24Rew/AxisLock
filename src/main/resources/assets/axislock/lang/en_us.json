@@ -1,0 +1,11 @@
+{
+  "category.axislock.keys": "Axis Lock",
+  "key.axislock.cycle_axis": "Cycle Locked Axis",
+  "key.axislock.hold": "Hold Axis Lock",
+  "key.axislock.toggle": "Toggle Axis Lock",
+  "axislock.hold.enabled": "Hold Axis Lock: Enabled (Axis: %s)",
+  "axislock.hold.disabled": "Hold Axis Lock: Disabled",
+  "axislock.toggle.enabled": "Axis Lock: Enabled (Axis: %s)",
+  "axislock.toggle.disabled": "Axis Lock: Disabled",
+  "axislock.cycle": "Locked Axis: %s"
+}

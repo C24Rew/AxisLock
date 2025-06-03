@@ -1,0 +1,11 @@
+{
+  "category.axislock.keys": "Axis Lock",
+  "key.axislock.cycle_axis": "Cambiar eje bloqueado",
+  "key.axislock.hold": "Mantener bloqueo de eje",
+  "key.axislock.toggle": "Alternar bloqueo de eje",
+  "axislock.hold.enabled": "Bloqueo de eje (mantener): Activado (Eje: %s)",
+  "axislock.hold.disabled": "Bloqueo de eje (mantener): Desactivado",
+  "axislock.toggle.enabled": "Bloqueo de eje: Activado (Eje: %s)",
+  "axislock.toggle.disabled": "Bloqueo de eje: Desactivado",
+  "axislock.cycle": "Eje bloqueado: %s"
+}
