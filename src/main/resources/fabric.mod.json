@@ -3,13 +3,13 @@
 	"id": "axislock",
 	"version": "${version}",
 	"name": "AxisLock",
-	"description": "This is an example description! Tell everyone what your mod is about!",
+	"description": "Limits block placement to a specific axis after the first block is placed.",
 	"authors": [
 		"C24Rew"
 	],
 	"contact": {
-		"homepage": "https://fabricmc.net/",
-		"sources": "https://github.com/FabricMC/fabric-example-mod"
+		"homepage": "https://modrinth.com/user/c24rew",
+		"sources": "https://github.com/C24Rew/AxisLock"
 	},
 	"license": "MIT (with resale restriction)",
 	"icon": "assets/axislock/icon.png",
