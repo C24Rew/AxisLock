@@ -182,7 +182,6 @@ public class AxisLock implements ClientModInitializer {
                 return ActionResult.PASS; // Allow placement to avoid getting stuck, but log error
             }
 
-            // IDEA told me to do this
             boolean allowPlacement = switch (currentSelectedAxis) {
                 case X ->
                     // If X-axis is locked, the X-coordinate of the new block must match the first block's X.

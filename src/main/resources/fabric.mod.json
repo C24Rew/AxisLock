@@ -11,7 +11,7 @@
 		"homepage": "https://modrinth.com/user/c24rew",
 		"sources": "https://github.com/C24Rew/AxisLock"
 	},
-	"license": "MIT (with resale restriction)",
+	"license": "MIT - with resale restriction",
 	"icon": "assets/axislock/icon.png",
 	"environment": "*",
 	"entrypoints": {
