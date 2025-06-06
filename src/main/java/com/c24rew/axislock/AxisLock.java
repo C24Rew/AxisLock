@@ -188,7 +188,7 @@ public class AxisLock implements ClientModInitializer {
 
         if (axisChangedByDirectSelection) {
             client.player.sendMessage(
-                    Text.translatable("axislock.select", // You'll need a new translation key
+                    Text.translatable("axislock.select",
                             currentSelectedAxis.toString()).formatted(Formatting.WHITE),
                     true
             );
