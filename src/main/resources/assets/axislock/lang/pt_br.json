@@ -11,5 +11,9 @@
   "axislock.hold.enabled": "AxisLock mantido: ATIVADO (Eixo: %s)",
   "axislock.hold.disabled": "AxisLock mantido: DESATIVADO",
   "axislock.cycle": "Eixo do AxisLock: %s",
-  "axislock.select": "Eixo do AxisLock selecionado: %s"
+  "axislock.select": "Eixo do AxisLock selecionado: %s",
+  "key.axislock.set_reference_point": "Definir ponto de referência",
+  "axislock.reference_point.set": "Ponto de referência definido como: %s",
+  "axislock.reference_point.error": "Não foi possível obter o ponto de referência",
+  "axislock.reference_point.reset": "Ponto de referência redefinido"
 }

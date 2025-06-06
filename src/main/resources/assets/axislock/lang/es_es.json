@@ -11,5 +11,9 @@
   "axislock.hold.enabled": "AxisLock mantenido: ACTIVADO (Eje: %s)",
   "axislock.hold.disabled": "AxisLock mantenido: DESACTIVADO",
   "axislock.cycle": "Eje de AxisLock: %s",
-  "axislock.select": "Eje de AxisLock seleccionado: %s"
+  "axislock.select": "Eje de AxisLock seleccionado: %s",
+  "key.axislock.set_reference_point": "Establecer punto de referencia",
+  "axislock.reference_point.set": "Punto de referencia establecido en: %s",
+  "axislock.reference_point.error": "No se pudo obtener el punto de referencia",
+  "axislock.reference_point.reset": "Punto de referencia restablecido"
 }

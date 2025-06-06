@@ -28,12 +28,14 @@ public class AxisLock implements ClientModInitializer {
     private static KeyBinding toggleModKey;
     private static KeyBinding cycleAxisKey;
     private static KeyBinding holdAxisLockKey;
+    private static KeyBinding ReferencePointKey;
 
     private static KeyBinding selectAxisXKey;
     private static KeyBinding selectAxisYKey;
     private static KeyBinding selectAxisZKey;
 
     private static boolean modEnabled = false;
+    private BlockPos manualReferencePoint = null; // Used for manual reference point setting
     private static boolean holdAxisLockActive = false; // Tracks if the hold-to-lock key is currently pressed
     private static Axis currentSelectedAxis = Axis.Y;
     private static BlockPos firstBlockPosInSequence = null;
@@ -57,6 +59,14 @@ public class AxisLock implements ClientModInitializer {
                 "category.axislock.keys"
         ));
 
+        ReferencePointKey = KeyBindingHelper.registerKeyBinding(new KeyBinding(
+                "key.axislock.set_reference_point", // Translation key
+                InputUtil.Type.KEYSYM,
+                GLFW.GLFW_KEY_B,
+                "category.axislock.keys"
+        ));
+
+        // Not bounded keys
         holdAxisLockKey = KeyBindingHelper.registerKeyBinding(new KeyBinding(
                 "key.axislock.hold", // Translation key for hold-to-lock functionality
                 InputUtil.Type.KEYSYM,
@@ -84,6 +94,7 @@ public class AxisLock implements ClientModInitializer {
                 InputUtil.UNKNOWN_KEY.getCode(), // Unbound by default
                 "category.axislock.keys"
         ));
+
 
         // Register client tick event for handling key presses and placement logic
         ClientTickEvents.END_CLIENT_TICK.register(this::onClientTick);
@@ -198,6 +209,34 @@ public class AxisLock implements ClientModInitializer {
                 firstBlockPosInSequence = null;
             }
         }
+
+        // Handle Reference Point Key
+        if (ReferencePointKey.wasPressed()) {
+            if (manualReferencePoint != null) {
+                client.player.sendMessage(
+                        Text.translatable("axislock.reference_point.reset").formatted(Formatting.YELLOW),
+                        true
+                );
+                manualReferencePoint = null; // Reset the reference point
+                return;
+            }
+            // Get the block that the player is looking at and use it as the reference point
+
+            BlockHitResult hitResult = client.crosshairTarget instanceof BlockHitResult ? (BlockHitResult) client.crosshairTarget : null;
+            if (client.world != null && hitResult != null && !client.world.getBlockState(hitResult.getBlockPos()).isAir()) {
+                manualReferencePoint = hitResult.getBlockPos();
+                client.player.sendMessage(
+                        Text.translatable("axislock.reference_point.set",
+                                manualReferencePoint.toShortString()).formatted(Formatting.YELLOW),
+                        true
+                );
+            } else {
+                client.player.sendMessage(
+                        Text.translatable("axislock.reference_point.error").formatted(Formatting.RED),
+                        true
+                );
+            }
+        }
     }
 
     private ActionResult onBlockPlaceAttempt(net.minecraft.entity.player.PlayerEntity player, World world, Hand hand, BlockHitResult hitResult) {
@@ -206,7 +245,7 @@ public class AxisLock implements ClientModInitializer {
 
         // Only run on client-side, if axis lock is active, and player is not a spectator
         if (!world.isClient() || !isAxisLockEffectivelyActive || player.isSpectator()) {
-            return ActionResult.PASS; // Allow normal placement
+            return ActionResult.PASS;
         }
 
         ItemStack stackInHand = player.getStackInHand(hand);
@@ -217,7 +256,9 @@ public class AxisLock implements ClientModInitializer {
 
         BlockPos potentialPlacePos = hitResult.getBlockPos().offset(hitResult.getSide());
 
-        if (!isPlacingSequenceActive) {
+        if (manualReferencePoint != null) {
+            firstBlockPosInSequence = manualReferencePoint;
+        } else if (!isPlacingSequenceActive) {
             // This is the first block being placed with the lock active
             firstBlockPosInSequence = potentialPlacePos;
             isPlacingSequenceActive = true;
@@ -230,23 +271,24 @@ public class AxisLock implements ClientModInitializer {
                 isPlacingSequenceActive = false;
                 return ActionResult.PASS; // Allow placement to avoid getting stuck, but log error
             }
-
-            boolean allowPlacement = switch (currentSelectedAxis) {
-                case X ->
-                    // If X-axis is locked, the X-coordinate of the new block must match the first block's X.
-                    // Y and Z coordinates can vary.
-                        (potentialPlacePos.getX() == firstBlockPosInSequence.getX());
-                case Y ->
-                    // If Y-axis is locked, the Y-coordinate (layer) of the new block must match the first block's Y.
-                    // X and Z coordinates can vary.
-                        (potentialPlacePos.getY() == firstBlockPosInSequence.getY());
-                case Z ->
-                    // If Z-axis is locked, the Z-coordinate of the new block must match the first block's Z.
-                    // X and Y coordinates can vary.
-                        (potentialPlacePos.getZ() == firstBlockPosInSequence.getZ());
-            };
-
-            return allowPlacement ? ActionResult.PASS : ActionResult.FAIL;
         }
+
+        boolean allowPlacement = switch (currentSelectedAxis) {
+            case X ->
+                // If X-axis is locked, the X-coordinate of the new block must match the first block's X.
+                // Y and Z coordinates can vary.
+                    (potentialPlacePos.getX() == firstBlockPosInSequence.getX());
+            case Y ->
+                // If Y-axis is locked, the Y-coordinate (layer) of the new block must match the first block's Y.
+                // X and Z coordinates can vary.
+                    (potentialPlacePos.getY() == firstBlockPosInSequence.getY());
+            case Z ->
+                // If Z-axis is locked, the Z-coordinate of the new block must match the first block's Z.
+                // X and Y coordinates can vary.
+                    (potentialPlacePos.getZ() == firstBlockPosInSequence.getZ());
+        };
+
+        return allowPlacement ? ActionResult.PASS : ActionResult.FAIL;
+
     }
 }

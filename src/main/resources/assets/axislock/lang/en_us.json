@@ -11,5 +11,9 @@
   "axislock.hold.enabled": "AxisLock Held: ON (Axis: %s)",
   "axislock.hold.disabled": "AxisLock Held: OFF",
   "axislock.cycle": "AxisLock Axis: %s",
-  "axislock.select": "AxisLock Axis Selected: %s"
+  "axislock.select": "AxisLock Axis Selected: %s",
+  "key.axislock.set_reference_point": "Set Reference Point",
+  "axislock.reference_point.set": "Reference point set to: %s",
+  "axislock.reference_point.error": "Couldn't get reference point",
+  "axislock.reference_point.reset": "Reference point rested"
 }
