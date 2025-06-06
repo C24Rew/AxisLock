@@ -1,0 +1,15 @@
+{
+  "key.axislock.toggle": "Alternar AxisLock",
+  "key.axislock.cycle_axis": "Alternar eixo do AxisLock",
+  "key.axislock.hold": "Manter AxisLock",
+  "key.axislock.select_x": "Selecionar eixo X",
+  "key.axislock.select_y": "Selecionar eixo Y",
+  "key.axislock.select_z": "Selecionar eixo Z",
+  "category.axislock.keys": "AxisLock",
+  "axislock.toggle.enabled": "AxisLock alternado: ATIVADO (Eixo: %s)",
+  "axislock.toggle.disabled": "AxisLock alternado: DESATIVADO",
+  "axislock.hold.enabled": "AxisLock mantido: ATIVADO (Eixo: %s)",
+  "axislock.hold.disabled": "AxisLock mantido: DESATIVADO",
+  "axislock.cycle": "Eixo do AxisLock: %s",
+  "axislock.select": "Eixo do AxisLock selecionado: %s"
+}

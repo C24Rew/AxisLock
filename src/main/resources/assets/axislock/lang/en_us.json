@@ -1,11 +1,15 @@
 {
-  "category.axislock.keys": "Axis Lock",
-  "key.axislock.cycle_axis": "Cycle Locked Axis",
-  "key.axislock.hold": "Hold Axis Lock",
-  "key.axislock.toggle": "Toggle Axis Lock",
-  "axislock.hold.enabled": "Hold Axis Lock: Enabled (Axis: %s)",
-  "axislock.hold.disabled": "Hold Axis Lock: Disabled",
-  "axislock.toggle.enabled": "Axis Lock: Enabled (Axis: %s)",
-  "axislock.toggle.disabled": "Axis Lock: Disabled",
-  "axislock.cycle": "Locked Axis: %s"
+  "key.axislock.toggle": "Toggle AxisLock",
+  "key.axislock.cycle_axis": "Cycle AxisLock Axis",
+  "key.axislock.hold": "Hold AxisLock",
+  "key.axislock.select_x": "Select X Axis",
+  "key.axislock.select_y": "Select Y Axis",
+  "key.axislock.select_z": "Select Z Axis",
+  "category.axislock.keys": "AxisLock",
+  "axislock.toggle.enabled": "AxisLock Toggled: ON (Axis: %s)",
+  "axislock.toggle.disabled": "AxisLock Toggled: OFF",
+  "axislock.hold.enabled": "AxisLock Held: ON (Axis: %s)",
+  "axislock.hold.disabled": "AxisLock Held: OFF",
+  "axislock.cycle": "AxisLock Axis: %s",
+  "axislock.select": "AxisLock Axis Selected: %s"
 }

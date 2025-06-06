@@ -29,6 +29,10 @@ public class AxisLock implements ClientModInitializer {
     private static KeyBinding cycleAxisKey;
     private static KeyBinding holdAxisLockKey;
 
+    private static KeyBinding selectAxisXKey;
+    private static KeyBinding selectAxisYKey;
+    private static KeyBinding selectAxisZKey;
+
     private static boolean modEnabled = false;
     private static boolean holdAxisLockActive = false; // Tracks if the hold-to-lock key is currently pressed
     private static Axis currentSelectedAxis = Axis.Y;
@@ -38,8 +42,6 @@ public class AxisLock implements ClientModInitializer {
 
     @Override
     public void onInitializeClient() {
-        LOGGER.info("Initializing Axis Lock Mod");
-
         // Register Keybindings
         toggleModKey = KeyBindingHelper.registerKeyBinding(new KeyBinding(
                 "key.axislock.toggle", // Translation key for toggle functionality
@@ -57,6 +59,27 @@ public class AxisLock implements ClientModInitializer {
 
         holdAxisLockKey = KeyBindingHelper.registerKeyBinding(new KeyBinding(
                 "key.axislock.hold", // Translation key for hold-to-lock functionality
+                InputUtil.Type.KEYSYM,
+                InputUtil.UNKNOWN_KEY.getCode(), // Unbound by default
+                "category.axislock.keys"
+        ));
+
+        selectAxisXKey = KeyBindingHelper.registerKeyBinding(new KeyBinding(
+                "key.axislock.select_x", // Translation key
+                InputUtil.Type.KEYSYM,
+                InputUtil.UNKNOWN_KEY.getCode(), // Unbound by default
+                "category.axislock.keys"
+        ));
+
+        selectAxisYKey = KeyBindingHelper.registerKeyBinding(new KeyBinding(
+                "key.axislock.select_y", // Translation key
+                InputUtil.Type.KEYSYM,
+                InputUtil.UNKNOWN_KEY.getCode(), // Unbound by default
+                "category.axislock.keys"
+        ));
+
+        selectAxisZKey = KeyBindingHelper.registerKeyBinding(new KeyBinding(
+                "key.axislock.select_z", // Translation key
                 InputUtil.Type.KEYSYM,
                 InputUtil.UNKNOWN_KEY.getCode(), // Unbound by default
                 "category.axislock.keys"
@@ -145,6 +168,32 @@ public class AxisLock implements ClientModInitializer {
                 isPlacingSequenceActive = false;
                 firstBlockPosInSequence = null;
             } else if (!MinecraftClient.getInstance().options.useKey.isPressed()) { // Or if the place key is released
+                isPlacingSequenceActive = false;
+                firstBlockPosInSequence = null;
+            }
+        }
+
+        // Handle Direct Axis Selection Keys
+        boolean axisChangedByDirectSelection = false;
+        if (selectAxisXKey.wasPressed()) {
+            currentSelectedAxis = Axis.X;
+            axisChangedByDirectSelection = true;
+        } else if (selectAxisYKey.wasPressed()) {
+            currentSelectedAxis = Axis.Y;
+            axisChangedByDirectSelection = true;
+        } else if (selectAxisZKey.wasPressed()) {
+            currentSelectedAxis = Axis.Z;
+            axisChangedByDirectSelection = true;
+        }
+
+        if (axisChangedByDirectSelection) {
+            client.player.sendMessage(
+                    Text.translatable("axislock.select", // You'll need a new translation key
+                            currentSelectedAxis.toString()).formatted(Formatting.WHITE),
+                    true
+            );
+            // If axis changes during an active sequence, reset the sequence
+            if (isAxisLockEffectivelyActive && isPlacingSequenceActive) {
                 isPlacingSequenceActive = false;
                 firstBlockPosInSequence = null;
             }
