@@ -217,6 +217,9 @@ public class AxisLock implements ClientModInitializer {
                         Text.translatable("axislock.reference_point.reset").formatted(Formatting.YELLOW),
                         true
                 );
+                // this first two are just to make sure nothing weird happens
+                isPlacingSequenceActive = false;
+                firstBlockPosInSequence = null;
                 manualReferencePoint = null; // Reset the reference point
                 return;
             }
@@ -243,49 +246,41 @@ public class AxisLock implements ClientModInitializer {
         // Determine if axis lock is effectively active (either by toggle or hold)
         boolean isAxisLockEffectivelyActive = modEnabled || holdAxisLockActive;
 
-        // Only run on client-side, if axis lock is active, and player is not a spectator
         if (!world.isClient() || !isAxisLockEffectivelyActive || player.isSpectator()) {
             return ActionResult.PASS;
         }
 
         ItemStack stackInHand = player.getStackInHand(hand);
-        // Ensure the item in hand is a block
         if (!(stackInHand.getItem() instanceof BlockItem)) {
             return ActionResult.PASS;
         }
 
         BlockPos potentialPlacePos = hitResult.getBlockPos().offset(hitResult.getSide());
+        BlockPos referencePosForCheck;
 
         if (manualReferencePoint != null) {
-            firstBlockPosInSequence = manualReferencePoint;
-        } else if (!isPlacingSequenceActive) {
-            // This is the first block being placed with the lock active
-            firstBlockPosInSequence = potentialPlacePos;
-            isPlacingSequenceActive = true;
-            return ActionResult.PASS; // Allow placement of the first block
+            referencePosForCheck = manualReferencePoint;
         } else {
-            // This is a subsequent block in an active placement sequence
-            if (firstBlockPosInSequence == null) {
-                // This state should ideally not be reached if logic is correct
-                LOGGER.warn("AxisLock: Inconsistent state: isPlacingSequenceActive is true, but firstBlockPosInSequence is null. Resetting sequence.");
-                isPlacingSequenceActive = false;
-                return ActionResult.PASS; // Allow placement to avoid getting stuck, but log error
+            if (!isPlacingSequenceActive) {
+                // This is the first block being placed with the lock active
+                firstBlockPosInSequence = potentialPlacePos;
+                isPlacingSequenceActive = true;
+                return ActionResult.PASS; // Allow placement of the first block
+            } else {
+                if (firstBlockPosInSequence == null) {
+                    // This state should ideally not be reached if logic is correct
+                    LOGGER.warn("AxisLock: Inconsistent state: isPlacingSequenceActive is true, but firstBlockPosInSequence is null. Resetting sequence.");
+                    isPlacingSequenceActive = false;
+                    return ActionResult.PASS; // Allow placement to avoid getting stuck, but log error
+                }
+                referencePosForCheck = firstBlockPosInSequence;
             }
         }
 
         boolean allowPlacement = switch (currentSelectedAxis) {
-            case X ->
-                // If X-axis is locked, the X-coordinate of the new block must match the first block's X.
-                // Y and Z coordinates can vary.
-                    (potentialPlacePos.getX() == firstBlockPosInSequence.getX());
-            case Y ->
-                // If Y-axis is locked, the Y-coordinate (layer) of the new block must match the first block's Y.
-                // X and Z coordinates can vary.
-                    (potentialPlacePos.getY() == firstBlockPosInSequence.getY());
-            case Z ->
-                // If Z-axis is locked, the Z-coordinate of the new block must match the first block's Z.
-                // X and Y coordinates can vary.
-                    (potentialPlacePos.getZ() == firstBlockPosInSequence.getZ());
+            case X -> (potentialPlacePos.getX() == referencePosForCheck.getX());
+            case Y -> (potentialPlacePos.getY() == referencePosForCheck.getY());
+            case Z -> (potentialPlacePos.getZ() == referencePosForCheck.getZ());
         };
 
         return allowPlacement ? ActionResult.PASS : ActionResult.FAIL;
