@@ -289,6 +289,5 @@ public class AxisLock implements ClientModInitializer {
         };
 
         return allowPlacement ? ActionResult.PASS : ActionResult.FAIL;
-
     }
 }
